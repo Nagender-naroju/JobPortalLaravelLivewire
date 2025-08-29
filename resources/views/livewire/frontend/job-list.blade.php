@@ -24,25 +24,7 @@
                     </div>
                 </div>
                 <div class="card account-nav border-0 shadow mb-4 mb-lg-0">
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush ">
-                            <li class="list-group-item d-flex justify-content-between p-3">
-                                <a href="{{ route('account.settings') }}" wire:navigate>Account Settings</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="{{ route('job.post') }}" >Post a Job</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="{{ route('my.jobs') }}"  wire:navigate>My Jobs</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="job-applied.html">Jobs Applied</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="{{ route('saved.jobs') }}">Saved Jobs</a>
-                            </li>                                                        
-                        </ul>
-                    </div>
+                    <x-account-nav />
                 </div>
             </div>
             <div class="col-lg-9">

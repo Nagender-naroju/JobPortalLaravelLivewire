@@ -18,7 +18,7 @@ class AppliedResponse extends Mailable implements ShouldQueue
     /**
      * Create a new message instance.
      */
-    public function __construct($user,$jobData)
+    public function __construct($user=NULL,$jobData=NULL)
     {
         $this->user = $user;
         $this->jobData = $jobData;

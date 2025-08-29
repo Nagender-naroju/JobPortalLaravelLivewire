@@ -17,4 +17,5 @@ Route::get('/job-post', App\Livewire\Frontend\PostJob::class)->name('job.post');
 Route::get('/my-jobs', App\Livewire\Frontend\JobList::class)->name('my.jobs');
 Route::get('/saved-jobs', App\Livewire\Frontend\SavedJobs::class)->name('saved.jobs');
 Route::get('/find-jobs', App\Livewire\Frontend\JobsListing::class)->name('find.jobs');
+Route::get('/job-applications',App\Livewire\Frontend\JobApplications::class)->name('job.applications');
 require __DIR__.'/auth.php';
