@@ -65,7 +65,12 @@ class SavedJobs extends Component
 
     public function render()
     {
-        $saved = jobsSaved::with(['userData','jobData'])->where('user_id',$this->user_id)->orderBy('id',"DESC")->paginate(5);
+        $saved = jobsSaved::with([
+            'userData',
+            'jobData' => function ($query) {
+                $query->withCount('applications');
+            }
+        ])->where('user_id',$this->user_id)->orderBy('id',"DESC")->paginate(5);
 
         return view('livewire.frontend.'.$this->default_view,['saved'=>$saved])->extends('welcome')->section('content');
     }

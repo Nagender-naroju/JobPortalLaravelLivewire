@@ -55,7 +55,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure you want to remove this saved job?
+                        Are you sure you want to remove this from saved jobs ?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -89,7 +89,7 @@
                                                 <div class="info1">{{ $job->jobData->job_types->name  }}.{{ $job->jobData->location }}</div>
                                             </td>
                                             <td>{{ \Carbon\Carbon::parse($job->jobData->created_at)->format('d M, Y') }}</td>
-                                            <td>130 Applications</td>
+                                            <td>{{ $job->jobData->applications_count ?? 0 }} Applications</td>
                                             
                                             <td>
                                                 <div class="action-dots float-end">
