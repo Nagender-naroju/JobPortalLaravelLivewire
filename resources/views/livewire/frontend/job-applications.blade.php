@@ -60,14 +60,16 @@
                                                         <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                                     </a>
                                                     <ul class="dropdown-menu dropdown-menu-end">
-                                                        <li><a class="dropdown-item" href="job-detail.html"> <i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
+                                                        <li><a class="dropdown-item" href="#" wire:click="viewJob({{ $application->id }})"> <i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
                                                         <li><a class="dropdown-item" href="#"><i class="fa fa-trash" aria-hidden="true"></i> Remove</a></li>
                                                     </ul>
                                                 </div>
                                             </td>
                                         </tr>
                                     @empty
-                                        <tr>No Data Found</tr>
+                                        <tr>
+                                            <td>No Data Found</td>
+                                        </tr>
                                     @endforelse
                                 </tbody>
                             </table>

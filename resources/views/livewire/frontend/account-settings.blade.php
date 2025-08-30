@@ -24,30 +24,7 @@
                     </div>
                 </div>
                 <div class="card account-nav border-0 shadow mb-4 mb-lg-0">
-                    <div class="card-body p-0">
-                        <ul class="list-group list-group-flush ">
-                            <li class="list-group-item d-flex justify-content-between p-3">
-                                <a href="{{ route('account.settings') }}" wire:navigate>Account Settings</a>
-                            </li>
-                            @if ($role != 1)
-                                <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                    <a href="{{ route('job.post') }}"  wire:navigate>Post a Job</a>
-                                </li>
-                            @endif
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="{{ route('my.jobs') }}"  wire:navigate>My Jobs</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="{{ route('job.applications') }}" wire:navigate>Jobs Applied</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="{{ route('saved.jobs') }}" wire:navigate>Saved Jobs</a>
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                                <a href="#" wire:click.prevent="logout()">Logout</a>
-                            </li>                                                        
-                        </ul>
-                    </div>
+                   <x-account-nav/>
                 </div>
             </div>
             <div class="col-lg-9">
@@ -59,40 +36,39 @@
                 @endif
                 <div class="card border-0 shadow mb-4">
                     <form wire:submit="profile">
-                        <div class="card-body  p-4">
-                            <h3 class="fs-4 mb-1">My Profile</h3>
+                        <div class="card-body p-4">
+                            <h3 class="fs-4 mb-1" >My Profile</h3>
                             <div class="mb-4">
                                 <label for="" class="mb-2">Name*</label>
                                 <input type="text" placeholder="Enter Name" wire:model="name" class="form-control" name="name">
                             </div>
                             @error('name')
-                                <span style="color:red">{{ $message }}</span>
+                                <p style="color:red">{{ $message }}</p>
                             @enderror
                             <div class="mb-4">
                                 <label for="" class="mb-2">Email*</label>
                                 <input type="text" placeholder="Enter Email" wire:model="email" name="email" class="form-control">
                             </div>
                             @error('email')
-                                 <span style="color:red">{{ $message }}</span>
+                                 <p style="color:red">{{ $message }}</p>
                             @enderror
                             <div class="mb-4">
                                 <label for="" class="mb-2">Designation*</label>
                                 <input type="text" placeholder="Designation" wire:model="designation" name="designation" class="form-control">
                             </div>
                             @error('designation')
-                                 <span style="color:red">{{ $message }}</span>
+                                 <p style="color:red">{{ $message }}</p>
                             @enderror
                             <div class="mb-4">
                                 <label for="" class="mb-2">Mobile*</label>
                                 <input type="text" placeholder="Mobile" wire:model="phone_number" name="phone_number" class="form-control">
                             </div>  
                             @error('phone_number')
-                                <span style="color:red">{{ $message }}</span>
+                                <p style="color:red">{{ $message }}</p>
                             @enderror                      
                         </div>
                         <div class="card-footer  p-4">
                             <input type="submit" class="btn btn-primary" value="Update" wire:target="profile" wire:loading.attr="disabled">
-
                             <span wire:loading wire:target="profile" class="ms-2">
                                 <span class="spinner-border spinner-border-sm" role="status"></span>
                             </span>
@@ -115,21 +91,21 @@
                                 <input type="password" placeholder="Old Password" wire:model="old_password" name="old_password" class="form-control">
                             </div>
                             @error('old_password')
-                                <span style="color:red"> {{ $message }}</span>
+                                <p style="color:red"> {{ $message }}</p>
                             @enderror
                             <div class="mb-4">
                                 <label for="" class="mb-2">New Password*</label>
                                 <input type="password" placeholder="New Password" wire:model="new_password" name="new_password" class="form-control">
                             </div>
                             @error('new_password')
-                                <span style="color:red"> {{ $message }}</span>
+                                <p style="color:red"> {{ $message }}</p>
                             @enderror
                             <div class="mb-4">
                                 <label for="" class="mb-2">Confirm Password*</label>
                                 <input type="password" placeholder="Confirm Password" wire:model="confirm_password" name="confirm_password" class="form-control">
                             </div> 
                             @error('confirm_password')
-                                <span style="color:red"> {{ $message }}</span>
+                                <p style="color:red"> {{ $message }}</p>
                             @enderror
                         </form>                    
                     </div>

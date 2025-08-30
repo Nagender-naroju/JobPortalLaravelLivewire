@@ -90,7 +90,7 @@
                                         </tr>  
                                     @empty
                                         <tr class="active">
-                                            No Data Found
+                                            <td class="text-center">No Data Found</td>
                                         </tr>
                                     @endforelse
                             </table>
