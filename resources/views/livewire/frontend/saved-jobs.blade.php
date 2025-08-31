@@ -50,6 +50,13 @@
 
 
             <div class="col-lg-9">
+                @if (session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-circle me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                @endif
                 <div class="card border-0 shadow mb-4 p-3">
                     <div class="card-body card-form">
                         <h3 class="fs-4 mb-1">Saved Jobs</h3>

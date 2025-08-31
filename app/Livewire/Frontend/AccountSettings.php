@@ -23,13 +23,18 @@ class AccountSettings extends Component
 
     public function mount(){
 
-        $this->user_id = Auth::user()->id;
-        $this->role = Auth::user()->role;
-        $this->name = Auth::user()->name;
-        $this->email = Auth::user()->email;
-        $this->designation = Auth::user()->designation;
-        // $this->old_password = Auth::user()->password;
-        $this->phone_number = Auth::user()->phone_number;
+        if(Auth::check()){
+            $this->user_id = Auth::user()->id;
+            $this->role = Auth::user()->role;
+            $this->name = Auth::user()->name;
+            $this->email = Auth::user()->email;
+            $this->designation = Auth::user()->designation;
+            // $this->old_password = Auth::user()->password;
+            $this->phone_number = Auth::user()->phone_number;
+        }else{
+            session()->flash('error', 'Please login to view settings');
+            return;
+        }
     }
 
     public function profile()

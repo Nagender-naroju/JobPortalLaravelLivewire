@@ -13,10 +13,16 @@ class JobApplications extends Component
     public $defaultView = "job-applications";
     public $user_id;
     public $jobDetails;
+    public $application_id;
 
     public function mount()
     {
-        $this->user_id = Auth::user()->id;
+        if(Auth::check()){
+            $this->user_id = Auth::user()->id;
+        }else{
+            session()->flash('error',"Please login to view jobs applied");
+            return;
+        }
     }
 
     public function viewJob($application_id)
@@ -41,6 +47,24 @@ class JobApplications extends Component
         } catch (Exception $e) { // Fixed exception syntax
             session()->flash('error', $e->getMessage());
         }
+    }
+
+    public function remove_application()
+    {
+        try{
+            $applications_id = $this->application_id;
+            $application = JobsApplied::where(['id'=>$applications_id,'user_id'=>$this->user_id])->first();
+            if(empty($application)){
+                session()->flash('error', 'Not able to delete');
+            }else{
+                $application->delete();
+                session()->flash('error', 'Application Removed Successfully');
+            }
+        }catch(Exeption $e){
+            session()->flash('error', $e->getMessage());
+            
+        }
+        
     }
 
     public function render()

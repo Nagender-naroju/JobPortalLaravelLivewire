@@ -48,4 +48,6 @@ class JobModel extends Model
     {
         return $this->hasMany(JobsApplied::class, 'job_id', 'id');
     }
+
+    
 }

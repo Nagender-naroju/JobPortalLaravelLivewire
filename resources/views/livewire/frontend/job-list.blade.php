@@ -5,7 +5,7 @@
             <div class="col">
                 <nav aria-label="breadcrumb" class=" rounded-3 p-3 mb-4">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{url('/')}}">Home</a></li>
                         <li class="breadcrumb-item active">My Jobs</li>
                     </ol>
                 </nav>
@@ -103,6 +103,7 @@
                                                     <ul class="dropdown-menu dropdown-menu-end">
                                                         <li><a class="dropdown-item" href="#"  wire:click="switchView('job-details', {{ $row->id }})"> <i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
                                                         <li><a class="dropdown-item" href="#"><i class="fa fa-edit" aria-hidden="true"></i> Edit</a></li>
+                                                        <li><a class="dropdown-item" href="#"  wire:click="switchView('job-applicants', {{ $row->id }})"> <i class="fa fa-eye" aria-hidden="true"></i> View Applications</a></li>
                                                         <li><a class="dropdown-item" href="#" wire:click="remove_job({{ $row->id }})" wire:confirm="Are you sure you want to delete this job?"><i class="fa fa-trash" aria-hidden="true"></i> Remove</a></li>
                                                     </ul>
                                                 </div>

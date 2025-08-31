@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Frontend;
 
+use App\Models\Frontend\CategoryModel;
+use App\Models\Frontend\JobModel;
+use App\Models\Frontend\JobsApplied;
+use App\Models\Frontend\JobTypesModel;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Illuminate\Support\Facades\Auth;
-use App\Models\Frontend\CategoryModel;
-use App\Models\Frontend\JobTypesModel;
-use App\Models\Frontend\JobModel;
 
 class JobList extends Component
 {
@@ -26,6 +27,8 @@ class JobList extends Component
     public $user_id;
 
     protected $queryString = ['search'];
+    public $applicants;
+    public $application_id;
 
     // Reset pagination when typing
     public function updatingSearch()
@@ -35,9 +38,15 @@ class JobList extends Component
 
     public function mount()
     {
-        $this->name = Auth::user()->name ?? null;
-        $this->designation = Auth::user()->designation ?? null;
-        $this->user_id = Auth::user()->id;
+        if(Auth::check())
+        {
+            $this->name = Auth::user()->name ?? null;
+            $this->designation = Auth::user()->designation ?? null;
+            $this->user_id = Auth::user()->id;
+        }else{
+            session()->flash('error',"Please login to view jobs");
+            return;
+        }
 
         $this->categories = CategoryModel::where('status', '1')->get();
         $this->job_types = JobTypesModel::where('status', '1')->get();
@@ -49,6 +58,57 @@ class JobList extends Component
         if ($jobId) {
             $this->selectedJobId = $jobId;
             $this->loadJobDetails($jobId);
+            $this->loadApplicants($jobId);
+        }
+    }
+
+    public function loadApplicants($jobId)
+    {
+        try{
+            if(!Auth::check())
+            {
+                session()->flash('error',"Please login to view applicants");
+                return;
+            }
+            $this->applicants = JobsApplied::with(['userData'])->where(['job_id'=>$jobId])->get();
+        }catch(Exeption $e){
+            session()->flash('error',$e->getMessage());
+            return;
+        }
+    }
+
+    public function updateApplicationStatus($applicationId, $status)
+    {
+        try {
+            $application = JobsApplied::find($applicationId);
+            
+            if (!$application) {
+                session()->flash('error', 'Application not found');
+                return;
+            }
+
+            // Verify the job belongs to the current user
+            $job = JobModel::where('id', $application->job_id)
+                          ->where('user_id', $this->user_id)
+                          ->first();
+            
+            if (!$job) {
+                session()->flash('error', 'You do not have permission to update this application');
+                return;
+            }
+
+            $application->status = $status;
+            $application->save();
+            
+            session()->flash('success', 'Application status updated to ' . ucfirst($status));
+            
+            // Reload applicants
+            if ($this->selectedJobId) {
+                $this->loadApplicants($this->selectedJobId);
+            }
+            
+        } catch (Exception $e) {
+            session()->flash('error', 'Error updating application: ' . $e->getMessage());
         }
     }
 

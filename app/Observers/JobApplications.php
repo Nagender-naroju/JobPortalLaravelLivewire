@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Mail\ApplicationStatusResponse;
 use App\Mail\AppliedResponse;
 use App\Models\Frontend\JobsApplied;
 use Illuminate\Support\Facades\Mail;
@@ -25,7 +26,11 @@ class JobApplications
      */
     public function updated(JobsApplied $jobsApplied): void
     {
-        //
+       $userEmail = $jobsApplied->userData->email;
+       $name = $jobsApplied->userData;
+       $job_title = $jobsApplied->jobData;
+
+       Mail::to($userEmail)->queue(new ApplicationStatusResponse($name,$job_title,$jobsApplied->status));
     }
 
     /**

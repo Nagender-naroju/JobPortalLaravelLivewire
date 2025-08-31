@@ -21,7 +21,14 @@ class SavedJobs extends Component
 
     public function mount()
     {
-       $this->user_id = Auth::user()->id;
+        if(Auth::check())
+        {
+            $this->user_id = Auth::user()->id;
+        }else{
+            session()->flash('error', 'Please login to view saved jobs');
+            return;
+        }
+       
     }
 
     public function viewJob($jobId)
