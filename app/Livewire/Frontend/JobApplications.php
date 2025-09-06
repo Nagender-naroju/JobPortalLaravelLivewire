@@ -74,7 +74,7 @@ class JobApplications extends Component
             'jobData' => function ($query) {
                 $query->withCount(['applications' => function ($countQuery) {
                     $countQuery->where('user_id', '!=', $this->user_id);
-                }]);
+                }])->with(['job_types']);
             }
         ])->where('user_id', $this->user_id)->paginate(5);
         return view('livewire.frontend.'.$this->defaultView,['applications'=>$applications])->extends('welcome')->section('content');

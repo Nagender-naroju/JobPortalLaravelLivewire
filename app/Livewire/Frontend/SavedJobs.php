@@ -75,7 +75,7 @@ class SavedJobs extends Component
         $saved = jobsSaved::with([
             'userData',
             'jobData' => function ($query) {
-                $query->withCount('applications');
+                $query->withCount('applications')->with('job_types');
             }
         ])->where('user_id',$this->user_id)->orderBy('id',"DESC")->paginate(5);
 

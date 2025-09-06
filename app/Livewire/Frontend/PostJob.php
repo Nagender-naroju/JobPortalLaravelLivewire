@@ -2,12 +2,13 @@
 
 namespace App\Livewire\Frontend;
 
-use Livewire\Component;
-use Illuminate\Support\Facades\Auth;
-
+use App\Events\JobPostAdded;
 use App\Models\Frontend\CategoryModel;
-use App\Models\Frontend\JobTypesModel;
+
 use App\Models\Frontend\JobModel;
+use App\Models\Frontend\JobTypesModel;
+use Illuminate\Support\Facades\Auth;
+use Livewire\Component;
 
 class PostJob extends Component
 {
@@ -72,7 +73,7 @@ class PostJob extends Component
          'experience'=>"required|string"
         ]);
 
-        JobModel::create([
+        $job = JobModel::create([
             'title'=>$this->title,
             'user_id'=>Auth::user()->id,
             'category_id'=>$this->category_id,
@@ -90,6 +91,8 @@ class PostJob extends Component
             'company_website'=>$this->website,
             'experience'=>$this->experience
         ]);
+
+        JobPostAdded::dispatch($job);
 
         session()->flash('status','Job Posted Successfully');
      } 

@@ -26,9 +26,9 @@ class Home extends Component
     public function render()
     {
           
-        $featured_jobs = JobModel::where('is_featured','1')->orderBy('created_at','DESC')->take(6)->get();
+        $featured_jobs = JobModel::with(['job_types'])->where('is_featured','1')->orderBy('created_at','DESC')->take(6)->get();
 
-        $latest_jobs = JobModel::where('status','1')->orderBy('created_at','DESC')->take(6)->get();
+        $latest_jobs = JobModel::with(['job_types'])->where('status','1')->orderBy('created_at','DESC')->take(6)->get();
 
         return view('livewire.frontend.home',['featured_jobs'=>$featured_jobs,'latest_jobs'=>$latest_jobs])
                 ->extends('welcome')->section('content');
