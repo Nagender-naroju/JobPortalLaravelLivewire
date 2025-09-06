@@ -95,6 +95,9 @@ class PostJob extends Component
         JobPostAdded::dispatch($job);
 
         session()->flash('status','Job Posted Successfully');
+        
+        $this->reset();
+
      } 
 
     public function render()

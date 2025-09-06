@@ -1,8 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AccountSettings;
 
-Route::get('/', App\Livewire\Frontend\Home::class);
+Route::get('/', App\Livewire\Frontend\Home::class)->lazy();
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -18,4 +19,9 @@ Route::get('/my-jobs', App\Livewire\Frontend\JobList::class)->name('my.jobs');
 Route::get('/saved-jobs', App\Livewire\Frontend\SavedJobs::class)->name('saved.jobs');
 Route::get('/find-jobs', App\Livewire\Frontend\JobsListing::class)->name('find.jobs');
 Route::get('/job-applications',App\Livewire\Frontend\JobApplications::class)->name('job.applications');
+
+Route::prefix('admin')->group(function () {
+    Route::get('/admin-settings', [AccountSettings::class, 'index']);
+});
+
 require __DIR__.'/auth.php';

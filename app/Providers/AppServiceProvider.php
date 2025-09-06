@@ -5,6 +5,7 @@ namespace App\Providers;
 
 use App\Events\JobPostAdded;
 use App\Listeners\SendMailToAddedUser;
+use App\Listeners\SendMailToAllUsersAboutJobPost;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,9 +24,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        Event::listen(
-            JobPostAdded::class,
-            SendMailToAddedUser::class,
-        );
+        Event::listen(JobPostAdded::class,SendMailToAddedUser::class,);
+        Event::listen(JobPostAdded::class,SendMailToAllUsersAboutJobPost::class,);
+
     }
 }

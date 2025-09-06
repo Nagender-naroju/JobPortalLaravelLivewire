@@ -160,6 +160,7 @@ class JobList extends Component
                              $q->where('name', 'like', '%' . $this->search . '%'));
                 });
             })
+            ->orderBy('id','DESC')
             ->paginate(5);
 
         return view('livewire.frontend.'.$this->view, [
