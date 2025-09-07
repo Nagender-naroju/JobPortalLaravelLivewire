@@ -7,7 +7,7 @@
                 <nav aria-label="breadcrumb" class=" rounded-3 p-3 mb-4">
                     <ol class="breadcrumb mb-0">
                         <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item active">Account Settings</li>
+                        <li class="breadcrumb-item active">Posted Jobs</li>
                     </ol>
                 </nav>
             </div>
@@ -34,7 +34,7 @@
                             <a href="{{ url('admin/settings') }}"  wire:navigate>Customers</a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
-                            <a href="{{ url('admin/posted-jobs') }}"  wire:navigate>Posted Jobs</a>
+                            <a href="{{ url('/admin/posted-jobs') }}"  wire:navigate>Posted Jobs</a>
                         </li>
                         <li class="list-group-item d-flex justify-content-between align-items-center p-3">
                             <a href="{{ url('admin/job-applications') }}" wire:navigate>Job Applications</a>
@@ -47,7 +47,7 @@
                 </div>
             </div>
             <div class="col-lg-9">
-                <livewire:admin.account-settings lazy="on-load"/>
+                <livewire:admin.job-applications-list lazy="on-load"/>
             </div>
         </div>
     </div>

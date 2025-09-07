@@ -1,7 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AccountSettings as AdminSettings;
+use App\Livewire\Frontend\Home;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\AddedJobs;
+use App\Http\Controllers\Admin\JobApplicationsList;
+
 
 Route::get('/', App\Livewire\Frontend\Home::class);
 
@@ -20,8 +24,10 @@ Route::get('/saved-jobs', App\Livewire\Frontend\SavedJobs::class)->name('saved.j
 Route::get('/find-jobs', App\Livewire\Frontend\JobsListing::class)->name('find.jobs');
 Route::get('/job-applications',App\Livewire\Frontend\JobApplications::class)->name('job.applications');
 
-Route::prefix('admin')->group(function () {
-    Route::get('/admin-settings', [AdminSettings::class, 'index']);
+Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
+    Route::get('/settings', [AdminSettings::class, 'index']);
+    Route::get('/posted-jobs', [AddedJobs::class, 'index']);  //
+    Route::get('/job-applications', [JobApplicationsList::class, 'index']);
 });
 
 require __DIR__.'/auth.php';

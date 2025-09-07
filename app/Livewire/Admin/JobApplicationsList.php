@@ -2,36 +2,10 @@
 
 namespace App\Livewire\Admin;
 
-use App\Models\User;
 use Livewire\Component;
-use Livewire\Attributes\Middleware;
-use Livewire\WithPagination;
 
-#[Middleware(['auth', 'is_admin'])]
-
-class AccountSettings extends Component
+class JobApplicationsList extends Component
 {
-    use WithPagination;
-    public $search="";
-
-    public function updatingSearch($newValue)
-    {
-        // Clean the input before saving
-        $this->search = strtoupper($newValue); // Remove extra spaces
-        
-        // Reset pagination when user types
-        $this->resetPage();
-    }
-
-    public function clearSearch()
-    {
-        $this->search="";
-    }
-
-    public function updatedSearch()
-    {
-        $this->search;
-    }
 
     public function placeholder()
     {
@@ -70,70 +44,6 @@ class AccountSettings extends Component
                                 <td>
                                     <div class="placeholder-glow">
                                         <span class="placeholder col-6"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-7"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="active">
-                                <th>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder" style="width: 20px;"></span>
-                                    </div>
-                                </th>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-7"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-9"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-8"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-7"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></span>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="active">
-                                <th>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder" style="width: 20px;"></span>
-                                    </div>
-                                </th>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-7"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-9"></span>
-                                    </div>
-                                </td>
-                                <td>
-                                    <div class="placeholder-glow">
-                                        <span class="placeholder col-8"></span>
                                     </div>
                                 </td>
                                 <td>
@@ -211,6 +121,70 @@ class AccountSettings extends Component
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="active">
+                                <th>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder" style="width: 20px;"></span>
+                                    </div>
+                                </th>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-7"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-9"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-8"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-7"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="active">
+                                <th>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder" style="width: 20px;"></span>
+                                    </div>
+                                </th>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-7"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-9"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-8"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder col-7"></span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="placeholder-glow">
+                                        <span class="placeholder" style="width: 30px; height: 30px; border-radius: 50%;"></span>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -220,7 +194,6 @@ class AccountSettings extends Component
 
     public function render()
     {
-        $users = User::where('role', '!=', 3)->where('name','like',"%".$this->search."%")->orderBy('id','DESC')->get();
-        return view('livewire.admin.account-settings',['users'=>$users]);
+        return view('livewire.admin.job-applications-list');
     }
 }

@@ -5,6 +5,7 @@ use App\Models\Frontend\CategoryModel;
 
 use App\Models\Frontend\JobsApplied;
 use App\Models\Frontend\JobTypesModel;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -47,6 +48,11 @@ class JobModel extends Model
     public function applications()
     {
         return $this->hasMany(JobsApplied::class, 'job_id', 'id');
+    }
+
+    public function users()
+    {
+        return $this->belongsTo(User::class,'user_id', 'id');
     }
 
     
