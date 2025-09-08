@@ -29,6 +29,7 @@ class JobList extends Component
     protected $queryString = ['search'];
     public $applicants;
     public $application_id;
+    public $role;
 
     // Reset pagination when typing
     public function updatingSearch()
@@ -43,6 +44,7 @@ class JobList extends Component
             $this->name = Auth::user()->name ?? null;
             $this->designation = Auth::user()->designation ?? null;
             $this->user_id = Auth::user()->id;
+            $this->role = Auth::user()->role;
         }else{
             session()->flash('error',"Please login to view jobs");
             return;

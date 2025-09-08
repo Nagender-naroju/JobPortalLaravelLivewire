@@ -27,7 +27,12 @@ Route::get('/job-applications',App\Livewire\Frontend\JobApplications::class)->na
 Route::prefix('admin')->middleware(['auth', 'is_admin'])->group(function () {
     Route::get('/settings', [AdminSettings::class, 'index']);
     Route::get('/posted-jobs', [AddedJobs::class, 'index']);  //
+    Route::get('/view-job/{id}', [AddedJobs::class, 'job_view'])->name('view.job'); 
+    Route::post('/change-status', [AddedJobs::class, 'changeStatus']);
+
     Route::get('/job-applications', [JobApplicationsList::class, 'index']);
+    Route::get('/application-job-view/{id}', [JobApplicationsList::class, 'job_view'])->name('application.job.view');
+    
 });
 
 require __DIR__.'/auth.php';

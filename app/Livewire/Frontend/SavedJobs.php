@@ -18,12 +18,14 @@ class SavedJobs extends Component
     public $single_job;
 
     public $jobToRemoveId;
+    public $role;
 
     public function mount()
     {
         if(Auth::check())
         {
             $this->user_id = Auth::user()->id;
+            $this->role = Auth::user()->role;
         }else{
             session()->flash('error', 'Please login to view saved jobs');
             return;

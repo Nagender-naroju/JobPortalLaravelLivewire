@@ -75,12 +75,12 @@
                                     </div>
                                 </td>
                                 <td>
-                                    <div class="action-dots float-end">
+                                    <div class="action-dots float-end" wire:ignore>
                                         <a href="#" class="" data-bs-toggle="dropdown" aria-expanded="false">
                                             <i class="fa fa-ellipsis-v" aria-hidden="true"></i>
                                         </a>
                                         <ul class="dropdown-menu dropdown-menu-end">
-                                            <li><a class="dropdown-item" href="job-detail.html"> <i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('view.job', $job->id) }}" wire:navigate> <i class="fa fa-eye" aria-hidden="true"></i> View</a></li>
                                             <li><a class="dropdown-item" href="#" data-bs-toggle="modal" wire:click="setPostForDeletion({{ $job->id }}, {{ json_encode($job->title) }})" data-bs-target="#exampleModal"><i class="fa fa-trash" aria-hidden="true"></i> Remove</a></li>
                                         </ul>
                                     </div>

@@ -33,6 +33,7 @@ class JobsListing extends Component
     public $current_page = "jobs-listing"; //default page
     public $logged_userId;
     public $single_job;
+    public $role;
 
     public function mount()
     {
@@ -43,6 +44,7 @@ class JobsListing extends Component
         if(Auth::check())
         {
             $this->logged_userId = Auth::user()->id;
+            $this->role = Auth::user()->role;
         }
     }
 

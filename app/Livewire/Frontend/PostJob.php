@@ -34,6 +34,7 @@ class PostJob extends Component
     public $website;
 
     public $jobs = [];
+    public $role;
 
 
     public function mount()
@@ -41,6 +42,7 @@ class PostJob extends Component
         $this->name = Auth::user()->name;
         $this->email = Auth::user()->email;
         $this->designation = Auth::user()->designation;
+        $this->role = Auth::user()->role;
 
         // Categories
         $this->categories = CategoryModel::where('status','1')->get();

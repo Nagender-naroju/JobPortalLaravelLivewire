@@ -86,7 +86,8 @@
                                         </div>
 
                                         <div class="d-grid mt-3">
-                                            <a href="job-detail.html" class="btn btn-primary btn-lg">Details</a>
+                                            <!-- <a wire:click="changePage('job-info',{{  $row->id }})" class="btn btn-primary btn-lg">Details</a> -->
+                                            <button class="btn btn-primary btn-lg" wire:click="changePage('job-info',{{  $row->id }})">Details</button>
                                         </div>
                                     </div>
                                 </div>
@@ -133,7 +134,7 @@
                                         </div>
 
                                         <div class="d-grid mt-3">
-                                            <a href="job-detail.html" class="btn btn-primary btn-lg">Details</a>
+                                            <button class="btn btn-primary btn-lg" wire:click="changePage('job-info',{{  $row->id }})">Details</button>
                                         </div>
                                     </div>
                                 </div>

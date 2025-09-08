@@ -2,16 +2,19 @@
 
 namespace App\Livewire\Admin;
 
+use App\Models\Frontend\JobsApplied;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class JobApplicationsList extends Component
 {
+    use WithPagination;
 
     public function placeholder()
     {
         return <<<'HTML'
             <div class="card border-0 shadow mb-4 mt-4">
-                <div class="card-header">Users Management</div>
+                <div class="card-header">Job Applications</div>
                 <div class="card-body p-4">
                     <table class="table">
                         <thead class="bg-light">
@@ -194,6 +197,7 @@ class JobApplicationsList extends Component
 
     public function render()
     {
-        return view('livewire.admin.job-applications-list');
+        $applications = JobsApplied::with(['userData','jobData'])->orderBy('id','DESC')->paginate(5);
+        return view('livewire.admin.job-applications-list',['applications'=>$applications]);
     }
 }

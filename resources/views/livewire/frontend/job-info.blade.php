@@ -84,11 +84,10 @@
                         </div>
                         <div class="border-bottom"></div>
                         <div class="pt-3 text-end">
-                            @if ($logged_userId != $single_job->user_id)
+                            @if ($logged_userId != $single_job->user_id && $role != 3)
                                 <a wire:click="saveJob({{ $single_job->id }})" class="btn btn-secondary">Save</a>
                                 <a wire:click="applyJob({{ $single_job->id }})" class="btn btn-primary">Apply</a>   
                             @endif
-                            
                         </div>
                     </div>
                 </div>

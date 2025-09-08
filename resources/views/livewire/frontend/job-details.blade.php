@@ -65,7 +65,7 @@
                         </div>
                         <div class="single_wrap">
                             <h4>Benefits</h4>
-                            <p>There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable. If you are going to use a passage of Lorem Ipsum, you need to be sure there isn't anything embarrassing.</p>
+                            <p>{{ $selectedJob->benefits }}</p>
                         </div>
                         <div class="border-bottom"></div>
                         <div class="pt-3 text-end">
@@ -84,9 +84,9 @@
                         <div class="job_content pt-3">
                             <ul>
                                 <li>Published on: <span>12 Nov, 2019</span></li>
-                                <li>Vacancy: <span>2 Position</span></li>
-                                <li>Salary: <span>50k - 120k/y</span></li>
-                                <li>Location: <span>California, USA</span></li>
+                                <li>Vacancy: <span>{{ $selectedJob->vacancy }} Position</span></li>
+                                <li>Salary: <span>{{ $selectedJob->salary }}k/y</span></li>
+                                <li>Location: <span>{{ $selectedJob->location }}</span></li>
                                 <li>Job Nature: <span> Full-time</span></li>
                             </ul>
                         </div>
@@ -99,9 +99,9 @@
                         </div>
                         <div class="job_content pt-3">
                             <ul>
-                                <li>Name: <span>XYZ Company</span></li>
-                                <li>Locaion: <span>Noida</span></li>
-                                <li>Webite: <span>www.example.com</span></li>
+                                <li>Name: <span>{{ $selectedJob->company_name }}</span></li>
+                                <li>Locaion: <span>{{ $selectedJob->company_location }}</span></li>
+                                <li>Webite: <span><a href="" target="_blank">{{ $selectedJob->company_website }}</a></span></li>
                             </ul>
                         </div>
                     </div>

@@ -12,12 +12,13 @@ class AddedJobs extends Component
 
     public $postId;
     public $postName;
+    public $defaultView='added-jobs';
 
     public function placeholder()
     {
         return <<<'HTML'
             <div class="card border-0 shadow mb-4 mt-4">
-                <div class="card-header">Users Management</div>
+                <div class="card-header">Posted Jobs</div>
                 <div class="card-body p-4">
                     <table class="table">
                         <thead class="bg-light">
@@ -235,7 +236,7 @@ class AddedJobs extends Component
 
     public function render()
     {
-        $jobs = JobModel::with('applications')->orderBy('id','DESC')->paginate(5);
-        return view('livewire.admin.added-jobs',['jobs'=>$jobs]);
+        $jobs = JobModel::with(['applications','job_types','users'])->orderBy('id','DESC')->paginate(5);
+        return view('livewire.admin.'.$this->defaultView,['jobs'=>$jobs]);
     }
 }

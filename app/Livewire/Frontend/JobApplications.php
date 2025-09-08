@@ -14,11 +14,13 @@ class JobApplications extends Component
     public $user_id;
     public $jobDetails;
     public $application_id;
+    public $role;
 
     public function mount()
     {
         if(Auth::check()){
             $this->user_id = Auth::user()->id;
+            $this->role = Auth::user()->role;
         }else{
             session()->flash('error',"Please login to view jobs applied");
             return;
