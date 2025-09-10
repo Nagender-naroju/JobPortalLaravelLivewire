@@ -25,6 +25,7 @@ class JobsApplied extends Model
       return $this->belongsTo(User::class,'user_id','id');
    }
 
+
    public function jobData()
    {
       return $this->belongsTo(JobModel::class,'job_id','id');

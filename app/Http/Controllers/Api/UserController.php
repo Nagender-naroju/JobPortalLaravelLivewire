@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Frontend\CategoryModel;
 use App\Models\Frontend\JobModel;
+use App\Models\Frontend\JobsApplied;
+use App\Models\Frontend\SavedJobs;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -46,7 +48,7 @@ class UserController extends Controller
                     'user' => $user,
                 ], 201);
                 
-        }catch(Exeption $e){
+        }catch(Exception $e){
            return response()->json([
                 'status' => false,
                 'errors' => $e->getMessage()
@@ -95,6 +97,34 @@ class UserController extends Controller
         }
     }
 
+    public function my_profile(Request $request)
+    {
+      try{
+
+        $id = Auth::user()->id;
+        $userDetails = User::where('id',$id)->first();
+
+        if(!$userDetails)
+        {
+            return response()->json([
+                'status' => false,
+                'message'=>"User not found with id"
+            ], 400);
+        }else{
+            return response()->json([
+                'status' => true,
+                'message'=>"Data Fetched Successfully",
+                "data"=>$userDetails
+            ], 200);
+        }
+    }catch(Exception $e){
+        return response()->json([
+            'status' => false,
+            'message'=>$e->getMessage()
+        ], 400);
+    }
+    }
+
     public function jobs_list(Request $request)
     {
         $title = $request->get('title');
@@ -138,7 +168,7 @@ class UserController extends Controller
                 "data"=>$response
             ], 200);
 
-        }catch(Exeption $e){
+        }catch(Exception $e){
             return response()->json([
                 'status' => false,
                 'message'=>$e->getMessage()
@@ -146,4 +176,259 @@ class UserController extends Controller
         }
       
     }
+
+    public function view_job(Request $request)
+    {
+        // dd('hi');
+        try{
+            $validator = Validator::make($request->all(),[
+                'job_id'=>"required|numeric"
+            ]);
+    
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status' => false,
+                    'message'=>$validator->errors()
+                ], 400);
+            }
+    
+            $id = $request->job_id;
+            $jobDetails = JobModel::with(['category','job_types','users'])->withCount('applications')->where('id',$id)->first();
+            if(!$jobDetails)
+            {
+                return response()->json([
+                    'status' => false,
+                    'message'=>"Job not found with id"
+                ], 400);
+            }else{
+                return response()->json([
+                    'status' => true,
+                    'message'=>"Data Fetched Successfully",
+                    "data"=>$jobDetails
+                ], 200);
+            }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'message'=>$e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function my_jobs(){
+        try{
+            $userId = Auth::user()->id;
+            $userJobs = JobModel::with(['category','job_types','users'])->withCount('applications')->where('user_id',$userId)->orderBy('id','DESC')->paginate(10);
+            if($userJobs->count()>0){
+                return response()->json([
+                    'status' => true,
+                    'message'=>"Data fetched Successfully",
+                    'total_posts'=>$userJobs->count(),
+                    'data'=> $userJobs
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message'=>"No Jobs Posted"
+                ], 400);
+            }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'message'=>$e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function view_applicants(Request $request)
+    {
+        try{
+            $userId = Auth::user()->id;
+            $validator = Validator::make($request->all(),[
+                'job_id'=>"required|numeric"
+            ]);
+    // dd($userId);
+            if($validator->fails())
+            {
+                return response()->json([
+                    'status' => false,
+                    'message'=>$validator->errors()
+                ], 400);
+            }
+
+            $job_id = $request->get('job_id');
+
+            $job = JobModel::find($job_id);
+            if (!$job) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Job not found."
+                ], 404);
+            }
+    
+            if ($job->user_id !== $userId) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Unauthorized: You do not own this job."
+                ], 403);
+            }
+
+            // dd($job_id);
+            $applications = JobsApplied::with(['userData','jobData'])->where(['job_id'=>$job_id])->orderBy('id','DESC')->paginate(10);
+            
+            if($applications->count()>0){
+                return response()->json([
+                    'status' => true,
+                    'message'=>"Data fetched Successfully",
+                    'data'=> $applications
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message'=>"No Applications Found"
+                ], 400);
+            }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'message'=>$e->getMessage()
+            ], 400);
+        }
+    }
+
+    public function changeApplicationStatus(Request $request)
+    {
+        try {
+            $userId = Auth::user()->id;
+    
+            // Validate input
+            $validator = Validator::make($request->all(), [
+                'job_id' => "required|numeric",
+                'application_id' => "required|numeric", 
+                'status' => "required|string"
+            ]);
+    
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()
+                ], 400);
+            }
+    
+            $job_id = $request->get('job_id');
+            $application_id = $request->get('application_id');
+            $status = $request->get('status');
+    
+            $job = JobModel::find($job_id);
+            if (!$job) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Job not found."
+                ], 404);
+            }
+    
+            if ($job->user_id !== $userId) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Unauthorized: You do not own this job."
+                ], 403);
+            }
+    
+            $application = JobsApplied::where('id', $application_id)
+                                      ->where('job_id', $job_id)
+                                      ->first();
+    
+            if (!$application) {
+                return response()->json([
+                    'status' => false,
+                    'message' => "Application not found for this job."
+                ], 404);
+            }
+    
+            $application->status = $status;
+            $application->save();
+    
+            return response()->json([
+                'status' => true,
+                'message' => "Status changed successfully.",
+                'data' => $application
+            ], 200);
+    
+        } catch (\Exception $e) { 
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+
+    public function jobsApplied()
+    {
+        try{
+            $userId = Auth::user()->id;
+            $jobsApplied = JobsApplied::with(['jobData.users'])->where('user_id',$userId)->orderBy('id','DESC')->paginate(10);
+            // dd($jobsApplied);
+            if($jobsApplied->count()>0){
+                return response()->json([
+                    'status' => true,
+                    'message'=>"Data fetched Successfully",
+                    'data'=> $jobsApplied
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message'=>"No Data Found"
+                ], 400);
+            }
+
+        }catch (\Exception $e) { 
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function savedJobs()
+    {
+        try {
+            $user = Auth::user();
+
+            if (!$user) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'Unauthorized: Token not provided or invalid.'
+                ], 401);
+            }
+
+            $userId = $user->id;
+
+            $jobSaved = SavedJobs::with(['jobData.users']) 
+                                    ->where('user_id', $userId)
+                                    ->orderBy('id', 'DESC')
+                                    ->paginate(10);
+
+            if ($jobSaved->count() > 0) {
+                return response()->json([
+                    'status' => true,
+                    'message' => "Data fetched successfully.",
+                    'data' => $jobSaved
+                ], 200);
+            } else {
+                return response()->json([
+                    'status' => false,
+                    'message' => "No data found."
+                ], 400);
+            }
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 }
