@@ -4,8 +4,10 @@ namespace App\Providers;
 
 
 use App\Events\JobPostAdded;
+use App\Interfaces\UserInterface;
 use App\Listeners\SendMailToAddedUser;
 use App\Listeners\SendMailToAllUsersAboutJobPost;
+use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,7 +18,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(UserInterface::class,UserRepository::class);
     }
 
     /**

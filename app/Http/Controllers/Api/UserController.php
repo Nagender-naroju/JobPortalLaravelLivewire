@@ -3,11 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Interfaces\UserInterface;
 use App\Models\Frontend\CategoryModel;
 use App\Models\Frontend\JobModel;
 use App\Models\Frontend\JobsApplied;
 use App\Models\Frontend\SavedJobs;
 use App\Models\User;
+use App\Services\UserServices;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +17,12 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
+    public $userServices;
+    
+    public function __construct(UserServices $userServices)
+    {
+        $this->userServices = $userServices;
+    }
     // use Exception;
     public function register(Request $request)
     {
@@ -216,87 +224,6 @@ class UserController extends Controller
         }
     }
 
-    public function my_jobs(){
-        try{
-            $userId = Auth::user()->id;
-            $userJobs = JobModel::with(['category','job_types','users'])->withCount('applications')->where('user_id',$userId)->orderBy('id','DESC')->paginate(10);
-            if($userJobs->count()>0){
-                return response()->json([
-                    'status' => true,
-                    'message'=>"Data fetched Successfully",
-                    'total_posts'=>$userJobs->count(),
-                    'data'=> $userJobs
-                ], 200);
-            }else{
-                return response()->json([
-                    'status' => false,
-                    'message'=>"No Jobs Posted"
-                ], 400);
-            }
-        }catch(Exception $e){
-            return response()->json([
-                'status' => false,
-                'message'=>$e->getMessage()
-            ], 400);
-        }
-    }
-
-    public function view_applicants(Request $request)
-    {
-        try{
-            $userId = Auth::user()->id;
-            $validator = Validator::make($request->all(),[
-                'job_id'=>"required|numeric"
-            ]);
-    // dd($userId);
-            if($validator->fails())
-            {
-                return response()->json([
-                    'status' => false,
-                    'message'=>$validator->errors()
-                ], 400);
-            }
-
-            $job_id = $request->get('job_id');
-
-            $job = JobModel::find($job_id);
-            if (!$job) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Job not found."
-                ], 404);
-            }
-    
-            if ($job->user_id !== $userId) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Unauthorized: You do not own this job."
-                ], 403);
-            }
-
-            // dd($job_id);
-            $applications = JobsApplied::with(['userData','jobData'])->where(['job_id'=>$job_id])->orderBy('id','DESC')->paginate(10);
-            
-            if($applications->count()>0){
-                return response()->json([
-                    'status' => true,
-                    'message'=>"Data fetched Successfully",
-                    'data'=> $applications
-                ], 200);
-            }else{
-                return response()->json([
-                    'status' => false,
-                    'message'=>"No Applications Found"
-                ], 400);
-            }
-        }catch(Exception $e){
-            return response()->json([
-                'status' => false,
-                'message'=>$e->getMessage()
-            ], 400);
-        }
-    }
-
     public function changeApplicationStatus(Request $request)
     {
         try {
@@ -319,42 +246,15 @@ class UserController extends Controller
             $job_id = $request->get('job_id');
             $application_id = $request->get('application_id');
             $status = $request->get('status');
-    
-            $job = JobModel::find($job_id);
-            if (!$job) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Job not found."
-                ], 404);
-            }
-    
-            if ($job->user_id !== $userId) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Unauthorized: You do not own this job."
-                ], 403);
-            }
-    
-            $application = JobsApplied::where('id', $application_id)
-                                      ->where('job_id', $job_id)
-                                      ->first();
-    
-            if (!$application) {
-                return response()->json([
-                    'status' => false,
-                    'message' => "Application not found for this job."
-                ], 404);
-            }
-    
-            $application->status = $status;
-            $application->save();
-    
+
+            $res = $this->userServices->changestatus($application_id,$job_id,$status);
+
             return response()->json([
                 'status' => true,
-                'message' => "Status changed successfully.",
-                'data' => $application
+                'message' => 'Application status updated successfully.',
+                'data' => $res
             ], 200);
-    
+
         } catch (\Exception $e) { 
             return response()->json([
                 'status' => false,
@@ -364,12 +264,78 @@ class UserController extends Controller
     }
 
 
+    public function my_jobs(){
+        try{
+            $jobs = $this->userServices->userJobs();
+
+            if($jobs->count()>0)
+            {
+                return response()->json([
+                    'status' => true,
+                    'message'=>"Data fetched Successfully",
+                    'total_posts'=>$jobs->count(),
+                    'data'=> $jobs
+                ], 200);
+            }else{
+                return response()->json([
+                    'status' => false,
+                    'message'=>"No Jobs Posted"
+                ], 200);
+            }
+        }catch(Exception $e){
+            return response()->json([
+                'status' => false,
+                'message'=>$e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function view_applicants(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'job_id' => 'required|numeric'
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => false,
+                    'message' => $validator->errors()
+                ], 400);
+            }
+
+            $jobId = $request->get('job_id');
+            $applications = $this->userServices->jobApplicants($jobId);
+
+            return response()->json([
+                'status' => true,
+                'message' => "Data fetched successfully",
+                'data' => $applications
+            ], 200);
+
+        } catch (\Illuminate\Auth\Access\AuthorizationException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => "Unauthorized: You do not own this job."
+            ], 403);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'status' => false,
+                'message' => "Job not found."
+            ], 404);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => false,
+                'message' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function jobsApplied()
     {
         try{
-            $userId = Auth::user()->id;
-            $jobsApplied = JobsApplied::with(['jobData.users'])->where('user_id',$userId)->orderBy('id','DESC')->paginate(10);
-            // dd($jobsApplied);
+            $jobsApplied = $this->userServices->appliedJobs();
+
             if($jobsApplied->count()>0){
                 return response()->json([
                     'status' => true,
@@ -405,10 +371,7 @@ class UserController extends Controller
 
             $userId = $user->id;
 
-            $jobSaved = SavedJobs::with(['jobData.users']) 
-                                    ->where('user_id', $userId)
-                                    ->orderBy('id', 'DESC')
-                                    ->paginate(10);
+            $jobSaved = $this->userServices->userSavedJobs($userId);
 
             if ($jobSaved->count() > 0) {
                 return response()->json([
